@@ -1,26 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
+import CardView from "./CardView/CardView";
+import Card from "./lib/Card";
+import CardDeck from "./lib/CardDeck";
+import PokerHand from "./lib/PokerHand/PokerHand";
 
 function App() {
+  const [cards, setCards] = useState<Card[]>([]);
+  const hand = new PokerHand(cards);
+  const handOutCome = hand.getOutCome()
+
+
+  const getCards = () => {
+    const cardDeck = new CardDeck()
+    const card = cardDeck.getCards(5)
+    setCards(card)
+    return card
+  }
+  if (cards.length === 0) {
+    return (
+      <div>
+        <button onClick={getCards}>Cards</button>
+      </div>
+    )
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>
+        {cards.map (card => (
+          <CardView rank={card.rank} suit={card.suit} key={card.rank + card.suit}/>
+        ))}
+      </div>
+      <div>
+        <button onClick={getCards}>Cards</button>
+        <div> Pairs : {handOutCome.pairs}</div>
+        <div> Threes : {handOutCome.threes}</div>
+        <div> Four : {handOutCome.four}</div>
+      </div>
     </div>
   );
+
 }
 
 export default App;
